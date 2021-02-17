@@ -8,7 +8,7 @@
 # S1x: Client
 
 <p align="center">
-  <img alig src="assets/github/banner.png?raw=true" />
+  <img alig src="assets/github/banners1.png?raw=true" />
 </p>
 
 <br/>
