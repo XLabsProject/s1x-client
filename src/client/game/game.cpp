@@ -23,11 +23,28 @@ namespace game
 		return sv_cmd_args->argv[sv_cmd_args->nesting][index];
 	}
 
+	bool VirtualLobby_Loaded()
+	{
+		return *mp::virtualLobby_loaded == 1;
+	}
+
 	namespace environment
 	{
 		launcher::mode mode = launcher::mode::none;
 
-		launcher::mode get_mode()
+		launcher::mode translate_surrogate(const launcher::mode _mode)
+		{
+			switch (_mode)
+			{
+			case launcher::mode::survival:
+			case launcher::mode::zombies:
+				return launcher::mode::multiplayer;
+			default:
+				return _mode;
+			}
+		}
+
+		launcher::mode get_real_mode()
 		{
 			if (mode == launcher::mode::none)
 			{
@@ -35,6 +52,11 @@ namespace game
 			}
 
 			return mode;
+		}
+
+		launcher::mode get_mode()
+		{
+			return translate_surrogate(get_real_mode());
 		}
 
 		bool is_sp()
@@ -59,11 +81,17 @@ namespace game
 
 		std::string get_string()
 		{
-			const auto current_mode = get_mode();
+			const auto current_mode = get_real_mode();
 			switch (current_mode)
 			{
 			case launcher::mode::server:
 				return "Dedicated Server";
+
+			case launcher::mode::zombies:
+				return "Zombies";
+
+			case launcher::mode::survival:
+				return "Survival";
 
 			case launcher::mode::multiplayer:
 				return "Multiplayer";
@@ -76,25 +104,6 @@ namespace game
 
 			default:
 				return "Unknown (" + std::to_string(static_cast<int>(mode)) + ")";
-			}
-		}
-
-		std::string playmode_to_string(game::CodPlayMode playmode)
-		{
-			switch (playmode)
-			{
-			case CODPLAYMODE_CORE:
-				return "Core";
-			case CODPLAYMODE_ZOMBIES:
-				return "Zombies";
-			case CODPLAYMODE_SURVIVAL:
-				return "Survival";
-			case CODPLAYMODE_SP:
-				return "Singleplayer";
-			case CODPLAYMODE_NONE:
-				return "None";
-			default:
-				return "Unknown (" + std::to_string(static_cast<int>(playmode)) + ")";
 			}
 		}
 	}

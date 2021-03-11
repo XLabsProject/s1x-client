@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "../demonware.hpp"
+#include "../services.hpp"
 
 namespace demonware
 {
@@ -9,14 +9,14 @@ namespace demonware
 		this->register_task(4, &bdAnticheat::report_console_details);
 	}
 
-	void bdAnticheat::unk2(service_server* server, byte_buffer* buffer) const
+	void bdAnticheat::unk2(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO: Read data as soon as needed
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdAnticheat::report_console_details(service_server* server, byte_buffer* buffer) const
+	void bdAnticheat::report_console_details(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO: Read data as soon as needed
 		auto reply = server->create_reply(this->task_id());

@@ -52,7 +52,8 @@ namespace utils
 		for (auto i = this->key_value_pairs_.begin(); i != this->key_value_pairs_.end(); ++i)
 		{
 			//if (first) first = false;
-			/*else*/ info_string.append("\\");
+			/*else*/
+			info_string.append("\\");
 
 			info_string.append(i->first); // Key
 			info_string.append("\\");

@@ -28,7 +28,8 @@ namespace map_rotation
 		void launch_default_map()
 		{
 			auto* mapname = game::Dvar_FindVar("mapname");
-			if (mapname && mapname->current.string && strlen(mapname->current.string) && mapname->current.string != "mp_vlobby_room"s)
+			if (mapname && mapname->current.string && strlen(mapname->current.string) && mapname->current.string !=
+				"mp_vlobby_room"s)
 			{
 				launch_map(mapname->current.string);
 			}
@@ -102,6 +103,12 @@ namespace map_rotation
 				else if (key == "map")
 				{
 					store_new_rotation(rotation, i + 2);
+					if (!game::SV_MapExists(value.data()))
+					{
+						printf("map_rotation: '%s' map doesn't exist!\n", value.data());
+						launch_default_map();
+						return;
+					}
 					launch_map(value);
 					return;
 				}

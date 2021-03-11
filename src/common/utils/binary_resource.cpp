@@ -1,4 +1,6 @@
 #include "binary_resource.hpp"
+
+#include <utility>
 #include "nt.hpp"
 #include "io.hpp"
 
@@ -44,8 +46,8 @@ namespace utils
 		}
 	}
 
-	binary_resource::binary_resource(const int id, const std::string& file)
-		: filename_(file)
+	binary_resource::binary_resource(const int id, std::string file)
+		: filename_(std::move(file))
 	{
 		this->resource_ = nt::load_resource(id);
 

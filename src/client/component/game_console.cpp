@@ -408,7 +408,7 @@ namespace game_console
 
 	void print_internal(const char* fmt, ...)
 	{
-		char va_buffer[0x200] = { 0 };
+		char va_buffer[0x200] = {0};
 
 		va_list ap;
 		va_start(ap, fmt);
@@ -747,7 +747,6 @@ namespace game_console
 			dvars::con_inputCmdMatchColor = game::Dvar_RegisterVec4("con_inputCmdMatchColor", 0.80f, 0.80f, 1.0f, 1.0f,
 			                                                        0.0f,
 			                                                        1.0f, 1, "color of console matched command");
-
 		}
 	};
 }

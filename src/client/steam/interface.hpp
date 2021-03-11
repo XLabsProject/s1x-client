@@ -69,7 +69,8 @@ namespace steam
 				throw std::runtime_error("Invalid interface pointer");
 			}
 
-			return static_cast<T(__thiscall*)(void*, Args ...)>((*this->interface_ptr_)[table_entry])(this->interface_ptr_, args...);
+			return static_cast<T(__thiscall*)(void*, Args ...)>((*this->interface_ptr_)[table_entry])(
+				this->interface_ptr_, args...);
 		}
 
 	private:

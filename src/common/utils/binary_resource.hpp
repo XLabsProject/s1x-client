@@ -7,7 +7,7 @@ namespace utils
 	class binary_resource
 	{
 	public:
-		binary_resource(int id, const std::string& file);
+		binary_resource(int id, std::string file);
 
 		std::string get_extracted_file();
 

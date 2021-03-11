@@ -10,6 +10,9 @@ public:
 		singleplayer,
 		multiplayer,
 		server,
+		// Surrogates
+		survival,
+		zombies,
 	};
 
 	launcher();

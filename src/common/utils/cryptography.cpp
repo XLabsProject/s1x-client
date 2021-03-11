@@ -169,7 +169,8 @@ namespace utils::cryptography
 		register_prng(&yarrow_desc);
 		yarrow_start(state.get());
 
-		yarrow_add_entropy(reinterpret_cast<const uint8_t*>(entropy.data()), static_cast<unsigned long>(entropy.size()), state.get());
+		yarrow_add_entropy(reinterpret_cast<const uint8_t*>(entropy.data()), static_cast<unsigned long>(entropy.size()),
+		                   state.get());
 		yarrow_ready(state.get());
 
 		ecc_make_key(state.get(), find_prng("yarrow"), bits / 8, key.get());
@@ -335,7 +336,7 @@ namespace utils::cryptography
 
 	namespace aes
 	{
-		namespace 
+		namespace
 		{
 			void initialize()
 			{
@@ -359,9 +360,10 @@ namespace utils::cryptography
 		const auto aes = find_cipher("aes");
 
 		cbc_start(aes, reinterpret_cast<const uint8_t*>(iv.data()), reinterpret_cast<const uint8_t*>(key.data()),
-			static_cast<int>(key.size()), 0, &cbc);
+		          static_cast<int>(key.size()), 0, &cbc);
 		cbc_encrypt(reinterpret_cast<const uint8_t*>(data.data()),
-			reinterpret_cast<uint8_t*>(const_cast<char*>(enc_data.data())), static_cast<unsigned long>(data.size()), &cbc);
+		            reinterpret_cast<uint8_t*>(const_cast<char*>(enc_data.data())),
+		            static_cast<unsigned long>(data.size()), &cbc);
 		cbc_done(&cbc);
 
 		return enc_data;
@@ -378,9 +380,10 @@ namespace utils::cryptography
 		const auto aes = find_cipher("aes");
 
 		cbc_start(aes, reinterpret_cast<const uint8_t*>(iv.data()), reinterpret_cast<const uint8_t*>(key.data()),
-			static_cast<int>(key.size()), 0, &cbc);
+		          static_cast<int>(key.size()), 0, &cbc);
 		cbc_decrypt(reinterpret_cast<const uint8_t*>(data.data()),
-			reinterpret_cast<uint8_t*>(const_cast<char*>(dec_data.data())), static_cast<unsigned long>(data.size()), &cbc);
+		            reinterpret_cast<uint8_t*>(const_cast<char*>(dec_data.data())),
+		            static_cast<unsigned long>(data.size()), &cbc);
 		cbc_done(&cbc);
 
 		return dec_data;
@@ -416,7 +419,8 @@ namespace utils::cryptography
 		hmac_state state;
 		const auto sha1 = find_hash("sha1");
 		//hmac_memory
-		hmac_init(&state, sha1, reinterpret_cast<const unsigned char*>(key.data()), static_cast<unsigned long>(key.size()));
+		hmac_init(&state, sha1, reinterpret_cast<const unsigned char*>(key.data()),
+		          static_cast<unsigned long>(key.size()));
 		hmac_process(&state, reinterpret_cast<const unsigned char*>(data.data()), static_cast<int>(data.size()));
 
 		unsigned long outlen = *len;
@@ -486,98 +490,40 @@ namespace utils::cryptography
 		return string::dump_hex(hash, "");
 	}
 
-	namespace base64
+	std::string base64::encode(const uint8_t* data, const size_t len)
 	{
-		namespace 
-		{
-			const std::string base64_chars =
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				"abcdefghijklmnopqrstuvwxyz"
-				"0123456789+/";
+		std::string result;
+		result.resize((len + 2) * 2);
 
-			static inline bool is_base64(unsigned char c) {
-				return (isalnum(c) || (c == '+') || (c == '/'));
-			}
+		auto out_len = static_cast<unsigned long>(result.size());
+		if (base64_encode(data, static_cast<unsigned long>(len), result.data(), &out_len) != CRYPT_OK)
+		{
+			return {};
 		}
+
+		result.resize(out_len);
+		return result;
 	}
 
-	std::string base64::encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
-		std::string ret;
-		int i = 0;
-		int j = 0;
-		unsigned char char_array_3[3];
-		unsigned char char_array_4[4];
-
-		while (in_len--) {
-			char_array_3[i++] = *(bytes_to_encode++);
-			if (i == 3) {
-				char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-				char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-				char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-				char_array_4[3] = char_array_3[2] & 0x3f;
-
-				for (i = 0; (i < 4); i++)
-					ret += base64_chars[char_array_4[i]];
-				i = 0;
-			}
-		}
-
-		if (i)
-		{
-			for (j = i; j < 3; j++)
-				char_array_3[j] = '\0';
-
-			char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-			char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-			char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-
-			for (j = 0; (j < i + 1); j++)
-				ret += base64_chars[char_array_4[j]];
-
-			while ((i++ < 3))
-				ret += '=';
-
-		}
-
-		return ret;
-
+	std::string base64::encode(const std::string& data)
+	{
+		return base64::encode(reinterpret_cast<const unsigned char*>(data.data()), static_cast<unsigned>(data.size()));
 	}
 
-	std::string base64::decode(std::string const& encoded_string) {
-		size_t in_len = encoded_string.size();
-		int i = 0;
-		int j = 0;
-		int in_ = 0;
-		unsigned char char_array_4[4], char_array_3[3];
-		std::string ret;
+	std::string base64::decode(const std::string& data)
+	{
+		std::string result;
+		result.resize((data.size() + 2) * 2);
 
-		while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
-			char_array_4[i++] = encoded_string[in_]; in_++;
-			if (i == 4) {
-				for (i = 0; i < 4; i++)
-					char_array_4[i] = base64_chars.find(char_array_4[i]) & 0xff;
-
-				char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-				char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-				char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-				for (i = 0; (i < 3); i++)
-					ret += char_array_3[i];
-				i = 0;
-			}
+		auto out_len = static_cast<unsigned long>(result.size());
+		if (base64_decode(data.data(), static_cast<unsigned long>(data.size()),
+		                  reinterpret_cast<uint8_t*>(result.data()), &out_len) != CRYPT_OK)
+		{
+			return {};
 		}
 
-		if (i) {
-			for (j = 0; j < i; j++)
-				char_array_4[j] = base64_chars.find(char_array_4[j]) & 0xff;
-
-			char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-			char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-
-			for (j = 0; (j < i - 1); j++) ret += char_array_3[j];
-		}
-
-		return ret;
+		result.resize(out_len);
+		return result;
 	}
 
 	unsigned int jenkins_one_at_a_time::compute(const std::string& data)

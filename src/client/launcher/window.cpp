@@ -139,7 +139,7 @@ LRESULT window::processor(const UINT message, const WPARAM w_param, const LPARAM
 	{
 		const utils::nt::library user32{"user32.dll"};
 		const auto get_dpi = user32 ? user32.get_proc<UINT(WINAPI *)(HWND)>("GetDpiForWindow") : nullptr;
-		
+
 		if (get_dpi)
 		{
 			const auto dpi = get_dpi(*this);
@@ -192,7 +192,7 @@ LRESULT CALLBACK window::static_processor(HWND hwnd, UINT message, WPARAM w_para
 		auto data = reinterpret_cast<LPCREATESTRUCT>(l_param);
 		SetWindowLongPtrA(hwnd, GWLP_USERDATA, LONG_PTR(data->lpCreateParams));
 
-		reinterpret_cast<window*>(data->lpCreateParams)->handle_ = hwnd;
+		static_cast<window*>(data->lpCreateParams)->handle_ = hwnd;
 	}
 
 	const auto self = reinterpret_cast<window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));

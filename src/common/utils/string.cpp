@@ -138,11 +138,11 @@ namespace utils::string
 		std::string result;
 		result.reserve(wstr.size());
 
-		for(const auto& chr : wstr)
+		for (const auto& chr : wstr)
 		{
 			result.push_back(static_cast<char>(chr));
 		}
-		
+
 		return result;
 	}
 
@@ -151,11 +151,11 @@ namespace utils::string
 		std::wstring result;
 		result.reserve(str.size());
 
-		for(const auto& chr : str)
+		for (const auto& chr : str)
 		{
 			result.push_back(static_cast<wchar_t>(chr));
 		}
-		
+
 		return result;
 	}
 #pragma warning(pop)

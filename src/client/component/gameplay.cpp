@@ -18,12 +18,14 @@ namespace gameplay
 		}
 
 		void cm_transformed_capsule_trace_stub(struct trace_t* results, const float* start, const float* end,
-			struct Bounds* bounds, struct Bounds* capsule, int contents, const float* origin, const float* angles)
+		                                       struct Bounds* bounds, struct Bounds* capsule, int contents,
+		                                       const float* origin, const float* angles)
 		{
 			if (dvars::g_playerCollision->current.enabled)
 			{
 				reinterpret_cast<void(*)
-					(struct trace_t*, const float*, const float*, struct Bounds*, struct Bounds*, unsigned int, const float*, const float*)>
+					(struct trace_t*, const float*, const float*, struct Bounds*, struct Bounds*, unsigned int,
+					 const float*, const float*)>
 					(0x1403AB1C0)
 					(results, start, end, bounds, capsule, contents, origin, angles); // CM_TransformedCapsuleTrace
 			}
@@ -62,18 +64,23 @@ namespace gameplay
 			if (game::environment::is_sp()) return;
 
 			// Implement player ejection dvar
-			dvars::g_playerEjection = game::Dvar_RegisterBool("g_playerEjection", true, game::DVAR_FLAG_REPLICATED, "Flag whether player ejection is on or off");
+			dvars::g_playerEjection = game::Dvar_RegisterBool("g_playerEjection", true, game::DVAR_FLAG_REPLICATED,
+			                                                  "Flag whether player ejection is on or off");
 			utils::hook::call(0x1402D5E4A, stuck_in_client_stub);
 
 			// Implement player collision dvar
-			dvars::g_playerCollision = game::Dvar_RegisterBool("g_playerCollision", true, game::DVAR_FLAG_REPLICATED, "Flag whether player collision is on or off");
+			dvars::g_playerCollision = game::Dvar_RegisterBool("g_playerCollision", true, game::DVAR_FLAG_REPLICATED,
+			                                                   "Flag whether player collision is on or off");
 			utils::hook::call(0x1404563DA, cm_transformed_capsule_trace_stub); // SV_ClipMoveToEntity
 			utils::hook::call(0x1401F7F8F, cm_transformed_capsule_trace_stub); // CG_ClipMoveToEntity
 
 			// Implement bouncing dvar
 			utils::hook::jump(0x14014DF91, pm_bouncing_stub_mp, true);
 			dvars::pm_bouncing = game::Dvar_RegisterBool("pm_bouncing", false,
-				game::DVAR_FLAG_REPLICATED, "Enable bouncing");
+			                                             game::DVAR_FLAG_REPLICATED, "Enable bouncing");
+
+			// Change jump_slowdownEnable dvar flags to just "replicated"
+			utils::hook::set<uint8_t>(0x140135992, game::DVAR_FLAG_REPLICATED);
 		}
 	};
 }

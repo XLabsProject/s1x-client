@@ -2,14 +2,13 @@
 #include "loader/component_loader.hpp"
 
 #include "game/game.hpp"
-#include "game/dvars.hpp"
 
 #include <utils/hook.hpp>
 #include <utils/string.hpp>
 
 namespace colors
 {
-	struct HsvColor
+	struct hsv_color
 	{
 		unsigned char h;
 		unsigned char s;
@@ -20,7 +19,7 @@ namespace colors
 	{
 		std::vector<DWORD> color_table;
 
-		DWORD hsv_to_rgb(const HsvColor hsv)
+		DWORD hsv_to_rgb(const hsv_color hsv)
 		{
 			DWORD rgb;
 
@@ -97,7 +96,7 @@ namespace colors
 		                            const size_t unk, const size_t unk2)
 		{
 			// CL_GetClientName (CL_GetClientNameAndClantag?)
-			const auto result = reinterpret_cast<size_t(*)(const int, int, char*, int, size_t, size_t)>(0x140213E60)(
+			const auto result = reinterpret_cast<size_t(*)(int, int, char*, int, size_t, size_t)>(0x140213E60)(
 				local_client_num, index, buf, size, unk, unk2);
 
 			utils::string::strip(buf, buf, size);

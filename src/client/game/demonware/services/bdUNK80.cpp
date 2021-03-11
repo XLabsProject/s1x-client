@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "../demonware.hpp"
+#include "../services.hpp"
 
 namespace demonware
 {
@@ -13,42 +13,42 @@ namespace demonware
 		this->register_task(193, &bdUNK80::unk193);
 	}
 
-	void bdUNK80::unk42(service_server* server, byte_buffer* buffer) const
+	void bdUNK80::unk42(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdUNK80::unk49(service_server* server, byte_buffer* buffer) const
+	void bdUNK80::unk49(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdUNK80::unk60(service_server* server, byte_buffer* buffer) const
+	void bdUNK80::unk60(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdUNK80::unk130(service_server* server, byte_buffer* buffer) const
+	void bdUNK80::unk130(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdUNK80::unk165(service_server* server, byte_buffer* buffer) const
+	void bdUNK80::unk165(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdUNK80::unk193(service_server* server, byte_buffer* buffer) const
+	void bdUNK80::unk193(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());

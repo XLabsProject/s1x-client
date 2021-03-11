@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "demonware.hpp"
+#include "bit_buffer.hpp"
 
 namespace demonware
 {
@@ -100,7 +100,7 @@ namespace demonware
 		auto cur_out = 0;
 
 		const char* bytes = this->buffer_.data();
-		const auto output_bytes = reinterpret_cast<unsigned char*>(output);
+		const auto output_bytes = static_cast<unsigned char*>(output);
 
 		while (bits > 0)
 		{
@@ -133,7 +133,7 @@ namespace demonware
 
 		int bit = bits;
 		const auto bytes = const_cast<char*>(this->buffer_.data());
-		const auto* input_bytes = reinterpret_cast<const unsigned char*>(data);
+		const auto* input_bytes = static_cast<const unsigned char*>(data);
 
 		while (bit > 0)
 		{

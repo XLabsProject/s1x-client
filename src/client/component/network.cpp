@@ -163,10 +163,10 @@ namespace network
 	}
 
 	game::dvar_t* register_netport_stub(const char* dvarName, int value, int min, int max, unsigned int flags,
-		const char* description)
+	                                    const char* description)
 	{
 		auto dvar = game::Dvar_RegisterInt("net_port", 27016, 0, 0xFFFFu, game::DVAR_FLAG_LATCHED, "Network port");
-		
+
 		// read net_port from command line
 		command::read_startup_variable("net_port");
 

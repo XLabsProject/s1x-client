@@ -100,31 +100,27 @@ void loader::load_imports(const utils::nt::library& target, const utils::nt::lib
 		{
 			FARPROC function = nullptr;
 			std::string function_name;
+			const char* function_procname;
 
-			// is this an ordinal-only import?
 			if (IMAGE_SNAP_BY_ORDINAL(*name_table_entry))
 			{
-				auto library = utils::nt::library::load(name);
-				if (library)
-				{
-					function = GetProcAddress(library, MAKEINTRESOURCEA(IMAGE_ORDINAL(*name_table_entry)));
-				}
-
 				function_name = "#" + std::to_string(IMAGE_ORDINAL(*name_table_entry));
+				function_procname = MAKEINTRESOURCEA(IMAGE_ORDINAL(*name_table_entry));
 			}
 			else
 			{
 				auto* import = PIMAGE_IMPORT_BY_NAME(target.get_ptr() + *name_table_entry);
 				function_name = import->Name;
+				function_procname = function_name.data();
+			}
 
-				if (this->import_resolver_) function = FARPROC(this->import_resolver_(name, function_name));
-				if (!function)
+			if (this->import_resolver_) function = FARPROC(this->import_resolver_(name, function_name));
+			if (!function)
+			{
+				auto library = utils::nt::library::load(name);
+				if (library)
 				{
-					auto library = utils::nt::library::load(name);
-					if (library)
-					{
-						function = GetProcAddress(library, function_name.data());
-					}
+					function = GetProcAddress(library, function_procname);
 				}
 			}
 

@@ -81,12 +81,12 @@ namespace steam
 				const auto* operand = ud_insn_opr(&ud, 1);
 				if (operand && operand->type == UD_OP_MEM && operand->base == UD_R_RIP)
 				{
-					auto* operand_ptr = reinterpret_cast<char*>(ud_insn_len(&ud) + ud_insn_off(&ud) + operand->lval.sdword);
+					auto* operand_ptr = reinterpret_cast<char*>(ud_insn_len(&ud) + ud_insn_off(&ud) + operand->lval.
+						sdword);
 					if (!utils::memory::is_bad_read_ptr(operand_ptr) && utils::memory::is_rdata_ptr(operand_ptr))
 					{
 						return operand_ptr;
 					}
-
 				}
 			}
 

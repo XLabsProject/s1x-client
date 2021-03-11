@@ -9,6 +9,11 @@ namespace game
 	typedef vec_t vec3_t[3];
 	typedef vec_t vec4_t[4];
 
+	enum scr_string_t
+	{
+		scr_string_t_dummy = 0x0,
+	};
+
 	enum Sys_Folder
 	{
 		SF_ZONE = 0x0,
@@ -671,7 +676,7 @@ namespace game
 	{
 		cmd_function_s* next;
 		const char* name;
-		void(__cdecl* function)();
+		void (__cdecl* function)();
 	};
 
 	enum DvarSetSource : std::uint32_t
@@ -779,6 +784,29 @@ namespace game
 		SV_CMD_RELIABLE = 0x1,
 	};
 
+	enum threadType
+	{
+		THREAD_CONTEXT_MAIN = 0x0,
+		THREAD_CONTEXT_BACKEND = 0x1,
+		THREAD_CONTEXT_WORKER0 = 0x2,
+		THREAD_CONTEXT_WORKER1 = 0x3,
+		THREAD_CONTEXT_WORKER2 = 0x4,
+		THREAD_CONTEXT_WORKER3 = 0x5,
+		THREAD_CONTEXT_WORKER4 = 0x6,
+		THREAD_CONTEXT_WORKER5 = 0x7,
+		THREAD_CONTEXT_WORKER6 = 0x8,
+		THREAD_CONTEXT_WORKER7 = 0x9,
+		THREAD_CONTEXT_SERVER = 0xA,
+		THREAD_CONTEXT_TRACE_COUNT = 0xB,
+		THREAD_CONTEXT_TRACE_LAST = 0xA,
+		THREAD_CONTEXT_CINEMATIC = 0xB,
+		THREAD_CONTEXT_DATABASE = 0xC,
+		THREAD_CONTEXT_STREAM = 0xD,
+		THREAD_CONTEXT_SNDSTREAMPACKETCALLBACK = 0xE,
+		THREAD_CONTEXT_STATS_WRITE = 0xF,
+		THREAD_CONTEXT_COUNT = 0x10,
+	};
+
 	enum DBSyncMode
 	{
 		DB_LOAD_ASYNC = 0x0,
@@ -787,6 +815,13 @@ namespace game
 		DB_LOAD_ASYNC_FORCE_FREE = 0x3,
 		DB_LOAD_ASYNC_NO_SYNC_THREADS = 0x4,
 		DB_LOAD_SYNC_SKIP_ALWAYS_LOADED = 0x5,
+	};
+
+	struct XZoneInfo
+	{
+		const char* name;
+		int allocFlags;
+		int freeFlags;
 	};
 
 	enum XAssetType
@@ -815,7 +850,8 @@ namespace game
 		ASSET_TYPE_REVERB_CURVE,
 		ASSET_TYPE_SOUND_CONTEXT,
 		ASSET_TYPE_LOADED_SOUND,
-		ASSET_TYPE_CLIPMAP, // col_map
+		ASSET_TYPE_CLIPMAP,
+		// col_map
 		ASSET_TYPE_COMWORLD,
 		ASSET_TYPE_GLASSWORLD,
 		ASSET_TYPE_PATHDATA,
@@ -981,12 +1017,27 @@ namespace game
 		const char* buffer;
 	};
 
+	struct StringTableCell
+	{
+		const char* string;
+		int hash;
+	};
+
+	struct StringTable
+	{
+		const char* name;
+		int columnCount;
+		int rowCount;
+		StringTableCell* values;
+	};
+
 	union XAssetHeader
 	{
 		void* data;
 		Material* material;
 		Font_s* font;
 		RawFile* rawfile;
+		StringTable* stringTable;
 	};
 
 	enum TestClientType
@@ -1030,7 +1081,6 @@ namespace game
 
 		struct playerState_s
 		{
-
 		};
 
 		struct clientHeader_t
@@ -1069,7 +1119,6 @@ namespace game
 
 		struct playerState_s
 		{
-
 		};
 	}
 

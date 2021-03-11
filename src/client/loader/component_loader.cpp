@@ -76,10 +76,10 @@ void component_loader::pre_destroy()
 
 void component_loader::clean()
 {
-	auto& components =  get_components();
-	for(auto i = components.begin(); i != components.end();)
+	auto& components = get_components();
+	for (auto i = components.begin(); i != components.end();)
 	{
-		if(!(*i)->is_supported())
+		if (!(*i)->is_supported())
 		{
 			(*i)->pre_destroy();
 			i = components.erase(i);
@@ -118,10 +118,10 @@ std::vector<std::unique_ptr<component_interface>>& component_loader::get_compone
 	using component_vector_container = std::unique_ptr<component_vector, std::function<void(component_vector*)>>;
 
 	static component_vector_container components(new component_vector, [](component_vector* component_vector)
-		{
-			pre_destroy();
-			delete component_vector;
-		});
+	{
+		pre_destroy();
+		delete component_vector;
+	});
 
 	return *components;
 }

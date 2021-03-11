@@ -78,7 +78,7 @@ namespace dvars
 
 	namespace
 	{
-		template<typename T>
+		template <typename T>
 		T* find_dvar(std::vector<T>* vec, const std::string& name)
 		{
 			for (auto i = 0ull; i < vec->size(); i++)
@@ -150,7 +150,8 @@ namespace dvars
 			register_bool_overrides.push_back(std::move(values));
 		}
 
-		void Dvar_RegisterFloat(const std::string& name, float value, float min, float max, unsigned int flags, const std::string& description)
+		void Dvar_RegisterFloat(const std::string& name, float value, float min, float max, unsigned int flags,
+		                        const std::string& description)
 		{
 			dvar_float values;
 			values.name = name;
@@ -162,7 +163,8 @@ namespace dvars
 			register_float_overrides.push_back(std::move(values));
 		}
 
-		void Dvar_RegisterInt(const std::string& name, int value, int min, int max, unsigned int flags, const std::string& description)
+		void Dvar_RegisterInt(const std::string& name, int value, int min, int max, unsigned int flags,
+		                      const std::string& description)
 		{
 			dvar_int values;
 			values.name = name;
@@ -174,7 +176,8 @@ namespace dvars
 			register_int_overrides.push_back(std::move(values));
 		}
 
-		void Dvar_RegisterString(const std::string& name, const std::string& value, unsigned int flags, const std::string& description)
+		void Dvar_RegisterString(const std::string& name, const std::string& value, unsigned int flags,
+		                         const std::string& description)
 		{
 			dvar_string values;
 			values.name = name;
@@ -240,7 +243,8 @@ namespace dvars
 		return dvar_register_bool_hook.invoke<game::dvar_t*>(name, value, flags, description);
 	}
 
-	game::dvar_t* dvar_register_float(const char* name, float value, float min, float max, unsigned int flags, const char* description)
+	game::dvar_t* dvar_register_float(const char* name, float value, float min, float max, unsigned int flags,
+	                                  const char* description)
 	{
 		auto* var = find_dvar(&override::register_float_overrides, name);
 		if (var)
@@ -255,7 +259,8 @@ namespace dvars
 		return dvar_register_float_hook.invoke<game::dvar_t*>(name, value, min, max, flags, description);
 	}
 
-	game::dvar_t* dvar_register_int(const char* name, int value, int min, int max, unsigned int flags, const char* description)
+	game::dvar_t* dvar_register_int(const char* name, int value, int min, int max, unsigned int flags,
+	                                const char* description)
 	{
 		auto* var = find_dvar(&override::register_int_overrides, name);
 		if (var)

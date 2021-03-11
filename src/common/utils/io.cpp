@@ -118,6 +118,8 @@ namespace utils::io
 
 	void copy_folder(const std::filesystem::path& src, const std::filesystem::path& target)
 	{
-		std::filesystem::copy(src, target, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive);
+		std::filesystem::copy(src, target,
+		                      std::filesystem::copy_options::overwrite_existing |
+		                      std::filesystem::copy_options::recursive);
 	}
 }

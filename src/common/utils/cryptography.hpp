@@ -69,7 +69,7 @@ namespace utils::cryptography
 		std::string decrypt(const std::string& data, const std::string& iv, const std::string& key);
 	}
 
-	namespace hmac_sha1 
+	namespace hmac_sha1
 	{
 		std::string process(const std::string& data, const std::string& key, unsigned int* len);
 	}
@@ -94,8 +94,9 @@ namespace utils::cryptography
 
 	namespace base64
 	{
-		std::string encode(unsigned char const*, unsigned int len);
-		std::string decode(std::string const& s);
+		std::string encode(const uint8_t* data, size_t len);
+		std::string encode(const std::string& data);
+		std::string decode(const std::string& data);
 	}
 
 	namespace jenkins_one_at_a_time

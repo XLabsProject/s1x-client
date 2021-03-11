@@ -12,12 +12,11 @@ namespace utils::hook
 		public:
 			signature_result(std::vector<size_t>&& matches) : matches_(std::move(matches))
 			{
-				
 			}
 
 			[[nodiscard]] uint8_t* get(const size_t index) const
 			{
-				if(index >= this->count())
+				if (index >= this->count())
 				{
 					throw std::runtime_error("Invalid index");
 				}
@@ -33,7 +32,7 @@ namespace utils::hook
 		private:
 			std::vector<size_t> matches_;
 		};
-		
+
 		explicit signature(const std::string& pattern, const nt::library library = {})
 			: signature(pattern, library.get_ptr(), library.get_optional_header()->SizeOfImage)
 		{
@@ -55,7 +54,7 @@ namespace utils::hook
 	private:
 		std::string mask_;
 		std::basic_string<uint8_t> pattern_;
-		
+
 		uint8_t* start_;
 		size_t length_;
 

@@ -1,8 +1,6 @@
 #include <std_include.hpp>
 #include "loader/component_loader.hpp"
 #include "server_list.hpp"
-#include "game_console.hpp"
-#include "command.hpp"
 #include "localized_strings.hpp"
 #include "network.hpp"
 #include "scheduler.hpp"
@@ -44,7 +42,7 @@ namespace server_list
 
 		size_t server_list_index = 0;
 		int server_list_page = 0;
-		
+
 		volatile bool update_server_list = false;
 
 		void refresh_server_list()
@@ -98,12 +96,12 @@ namespace server_list
 				update_server_list = false;
 				return 0;
 			}
-			auto count = static_cast<int>(servers.size());
+			const auto count = static_cast<int>(servers.size());
 			return count > 15 ? 15 : count;
 		}
 
-		const char* ui_feeder_item_text(int /*localClientNum*/, void* /*a2*/, void* /*a3*/, const size_t index,
-		                                const size_t column)
+		const char* ui_feeder_item_text(int /*localClientNum*/, void* /*a2*/, void* /*a3*/, const int index,
+		                                const int column)
 		{
 			std::lock_guard<std::mutex> _(mutex);
 
@@ -141,7 +139,7 @@ namespace server_list
 		{
 			std::stable_sort(servers.begin(), servers.end(), [](const server_info& a, const server_info& b)
 			{
-				if(a.clients == b.clients)
+				if (a.clients == b.clients)
 				{
 					return a.ping < b.ping;
 				}
@@ -255,7 +253,7 @@ namespace server_list
 		}
 
 		void lui_open_menu_stub(int /*controllerIndex*/, const char* /*menu*/, int /*a3*/, int /*a4*/,
-			unsigned int /*a5*/)
+		                        unsigned int /*a5*/)
 		{
 			refresh_server_list();
 			game::Cmd_ExecuteSingleCommand(0, 0, "lui_open menu_systemlink_join\n");
@@ -288,14 +286,14 @@ namespace server_list
 	void handle_info_response(const game::netadr_s& address, const utils::info_string& info)
 	{
 		// Don't show servers that aren't running!
-		auto sv_running = std::atoi(info.get("sv_running").data());
+		const auto sv_running = std::atoi(info.get("sv_running").data());
 		if (!sv_running)
 		{
 			return;
 		}
 
 		// Only handle servers of the same playmode!
-		auto playmode = game::CodPlayMode(std::atoi(info.get("playmode").data()));
+		const auto playmode = game::CodPlayMode(std::atoi(info.get("playmode").data()));
 		if (game::Com_GetCurrentCoDPlayMode() != playmode)
 		{
 			return;

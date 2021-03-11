@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "../demonware.hpp"
+#include "../services.hpp"
 
 namespace demonware
 {
@@ -12,35 +12,35 @@ namespace demonware
 		this->register_task(16, &bdMatchMaking2::unk16);
 	}
 
-	void bdMatchMaking2::unk1(service_server* server, byte_buffer* buffer) const
+	void bdMatchMaking2::unk1(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdMatchMaking2::unk2(service_server* server, byte_buffer* buffer) const
+	void bdMatchMaking2::unk2(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdMatchMaking2::unk3(service_server* server, byte_buffer* buffer) const
+	void bdMatchMaking2::unk3(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdMatchMaking2::unk5(service_server* server, byte_buffer* buffer) const
+	void bdMatchMaking2::unk5(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdMatchMaking2::unk16(service_server* server, byte_buffer* buffer) const
+	void bdMatchMaking2::unk16(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());

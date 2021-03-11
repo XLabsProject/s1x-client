@@ -8,9 +8,9 @@ namespace tls
 {
 	namespace
 	{
-		utils::binary_resource tls_dll_file(TLS_DLL, "tlsdll.dll");
+		utils::binary_resource tls_dll_file(TLS_DLL, "s1x_tlsdll.dll");
 	}
-	
+
 	PIMAGE_TLS_DIRECTORY allocate_tls_index()
 	{
 		static auto already_allocated = false;

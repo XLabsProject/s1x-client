@@ -28,7 +28,7 @@ namespace demonware
 		bool read_data_type(char expected);
 
 		bool read_array_header(unsigned char expected, unsigned int* element_count,
-			unsigned int* element_size = nullptr);
+		                       unsigned int* element_size = nullptr);
 
 		bool write_byte(char data);
 		bool write_bool(bool data);

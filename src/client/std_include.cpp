@@ -8,7 +8,7 @@ extern "C"
 	__declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 1;
 };
 
-extern "C" 
+extern "C"
 {
 	int s_read_arc4random(void*, size_t)
 	{

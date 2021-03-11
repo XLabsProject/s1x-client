@@ -163,7 +163,7 @@ namespace utils::nt
 		const library other_module(module_name);
 		if (!other_module.is_valid()) return nullptr;
 
-		const auto target_function = other_module.get_proc<void*>(proc_name);
+		auto* const target_function = other_module.get_proc<void*>(proc_name);
 		if (!target_function) return nullptr;
 
 		auto* header = this->get_optional_header();

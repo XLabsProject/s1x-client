@@ -1,11 +1,21 @@
 #pragma once
 
+#include "bit_buffer.hpp"
+#include "byte_buffer.hpp"
+#include "data_types.hpp"
+
 namespace demonware
 {
-
 	class reply
 	{
 	public:
+		reply() = default;
+
+		reply(reply&&) = delete;
+		reply(const reply&) = delete;
+		reply& operator=(reply&&) = delete;
+		reply& operator=(const reply&) = delete;
+
 		virtual ~reply() = default;
 		virtual std::string data() = 0;
 	};
@@ -22,7 +32,7 @@ namespace demonware
 		{
 		}
 
-		virtual std::string data() override
+		std::string data() override
 		{
 			return this->buffer_;
 		}
@@ -30,16 +40,16 @@ namespace demonware
 
 	class typed_reply : public raw_reply
 	{
-	private:
-		uint8_t type_;
+	public:
+		typed_reply(const uint8_t _type) : type_(_type)
+		{
+		}
 
 	protected:
 		uint8_t type() const { return this->type_; }
 
-	public:
-		typed_reply(uint8_t _type) : type_(_type)
-		{
-		}
+	private:
+		uint8_t type_;
 	};
 
 	class encrypted_reply final : public typed_reply
@@ -55,54 +65,48 @@ namespace demonware
 			this->buffer_.append(bbuffer->get_buffer());
 		}
 
-		virtual std::string data() override;
+		std::string data() override;
 	};
 
 	class unencrypted_reply final : public typed_reply
 	{
 	public:
-		unencrypted_reply(uint8_t _type, bit_buffer* bbuffer) : typed_reply(_type)
+		unencrypted_reply(const uint8_t _type, bit_buffer* bbuffer) : typed_reply(_type)
 		{
 			this->buffer_.append(bbuffer->get_buffer());
 		}
 
-		unencrypted_reply(uint8_t _type, byte_buffer* bbuffer) : typed_reply(_type)
+		unencrypted_reply(const uint8_t _type, byte_buffer* bbuffer) : typed_reply(_type)
 		{
 			this->buffer_.append(bbuffer->get_buffer());
 		}
 
-		virtual std::string data() override;
+		std::string data() override;
 	};
 
 	class service_server;
 
 	class remote_reply final
 	{
-	private:
-		uint8_t type_;
-		service_server* server_;
-
 	public:
 		remote_reply(service_server* server, uint8_t _type) : type_(_type), server_(server)
 		{
 		}
 
-		void send(bit_buffer* buffer, const bool encrypted);
-		void send(byte_buffer* buffer, const bool encrypted);
+		void send(bit_buffer* buffer, bool encrypted);
+		void send(byte_buffer* buffer, bool encrypted);
 
 		uint8_t type() const { return this->type_; }
+
+	private:
+		uint8_t type_;
+		service_server* server_;
 	};
 
 	class service_reply final
 	{
-	private:
-		uint8_t type_;
-		uint32_t error_;
-		remote_reply reply_;
-		std::vector<std::shared_ptr<bdTaskResult>> objects_;
-
 	public:
-		service_reply(service_server* _server, uint8_t _type, uint32_t _error)
+		service_reply(service_server* _server, const uint8_t _type, const uint32_t _error)
 			: type_(_type), error_(_error), reply_(_server, 1)
 		{
 		}
@@ -150,6 +154,11 @@ namespace demonware
 		{
 			this->add(std::shared_ptr<bdTaskResult>(object));
 		}
-	};
 
+	private:
+		uint8_t type_;
+		uint32_t error_;
+		remote_reply reply_;
+		std::vector<std::shared_ptr<bdTaskResult>> objects_;
+	};
 }

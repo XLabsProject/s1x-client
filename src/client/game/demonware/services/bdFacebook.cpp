@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "../demonware.hpp"
+#include "../services.hpp"
 
 namespace demonware
 {
@@ -11,28 +11,28 @@ namespace demonware
 		this->register_task(8, &bdFacebook::unk8);
 	}
 
-	void bdFacebook::unk1(service_server* server, byte_buffer* buffer) const
+	void bdFacebook::unk1(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdFacebook::unk3(service_server* server, byte_buffer* buffer) const
+	void bdFacebook::unk3(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdFacebook::unk7(service_server* server, byte_buffer* buffer) const
+	void bdFacebook::unk7(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());
 		reply->send();
 	}
 
-	void bdFacebook::unk8(service_server* server, byte_buffer* buffer) const
+	void bdFacebook::unk8(service_server* server, byte_buffer* /*buffer*/) const
 	{
 		// TODO:
 		auto reply = server->create_reply(this->task_id());

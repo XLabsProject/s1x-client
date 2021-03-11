@@ -12,29 +12,12 @@
 #include <utils/string.hpp>
 #include <utils/hook.hpp>
 
+#include "version.hpp"
+
 namespace patches
 {
 	namespace
 	{
-		game::dvar_t* register_virtual_lobby_enabled_stub(const char* name, bool /*value*/,
-				unsigned int /*flags*/,
-				const char* description)
-		{
-			return game::Dvar_RegisterBool(name, false, game::DVAR_FLAG_READ, description);
-		}
-
-		game::dvar_t* register_virtual_lobby_stubs(const char* name, bool value,
-			unsigned int flags,
-			const char* description)
-		{
-			if (game::Com_GetCurrentCoDPlayMode() == game::CODPLAYMODE_CORE)
-			{
-				value = true;
-				flags = game::DVAR_FLAG_READ;
-			}
-			return game::Dvar_RegisterBool(name, value, game::DVAR_FLAG_READ, description);
-		}
-
 		utils::hook::detour live_get_local_client_name_hook;
 
 		const char* live_get_local_client_name()
@@ -44,14 +27,14 @@ namespace patches
 
 		utils::hook::detour sv_kick_client_num_hook;
 
-		void sv_kick_client_num(const int clientNum, const char* reason)
+		void sv_kick_client_num(const int client_num, const char* reason)
 		{
 			// Don't kick bot to equalize team balance.
 			if (reason == "EXE_PLAYERKICKED_BOT_BALANCE"s)
 			{
 				return;
 			}
-			return sv_kick_client_num_hook.invoke<void>(clientNum, reason);
+			return sv_kick_client_num_hook.invoke<void>(client_num, reason);
 		}
 
 		utils::hook::detour com_register_dvars_hook;
@@ -71,15 +54,15 @@ namespace patches
 		}
 
 		game::dvar_t* register_com_maxfps_stub(const char* name, int /*value*/, int /*min*/, int /*max*/,
-			const unsigned int /*flags*/,
-			const char* description)
+		                                       const unsigned int /*flags*/,
+		                                       const char* description)
 		{
 			return game::Dvar_RegisterInt(name, 0, 0, 1000, game::DVAR_FLAG_SAVED, description);
 		}
 
 		game::dvar_t* register_cg_fov_stub(const char* name, float value, float min, float /*max*/,
-			const unsigned int flags,
-			const char* description)
+		                                   const unsigned int /*flags*/,
+		                                   const char* description)
 		{
 			return game::Dvar_RegisterFloat(name, value, min, 160, game::DVAR_FLAG_SAVED, description);
 		}
@@ -88,8 +71,7 @@ namespace patches
 		                                     unsigned int /*flags*/,
 		                                     const char* desc)
 		{
-			// changed max value from 2.0f -> 5.0f and min value from 0.5f -> 0.1f
-			return game::Dvar_RegisterFloat(name, 1.0f, 0.1f, 5.0f, game::DVAR_FLAG_SAVED, desc);
+			return game::Dvar_RegisterFloat(name, 1.0f, 0.2f, 5.0f, game::DVAR_FLAG_SAVED, desc);
 		}
 
 		int dvar_command_patch() // game makes this return an int and compares with eax instead of al -_-
@@ -104,8 +86,8 @@ namespace patches
 			{
 				if (args.size() == 1)
 				{
-					const auto current = game::Dvar_ValueToString(dvar, dvar->current);
-					const auto reset = game::Dvar_ValueToString(dvar, dvar->reset);
+					const auto* const current = game::Dvar_ValueToString(dvar, dvar->current);
+					const auto* const reset = game::Dvar_ValueToString(dvar, dvar->reset);
 					game_console::print(game_console::con_type_info, "\"%s\" is: \"%s^7\" default: \"%s^7\"",
 					                    dvar->name, current, reset);
 					game_console::print(game_console::con_type_info, "   %s\n",
@@ -140,7 +122,8 @@ namespace patches
 			}
 
 			// DB_ReadRawFile
-			return reinterpret_cast<const char*(*)(const char*, char*, int)>(SELECT_VALUE(0x140180E30, 0x140273080))(filename, buf, size);
+			return reinterpret_cast<const char*(*)(const char*, char*, int)>(SELECT_VALUE(0x140180E30, 0x140273080))(
+				filename, buf, size);
 		}
 
 		void aim_assist_add_to_target_list(void* a1, void* a2)
@@ -153,7 +136,8 @@ namespace patches
 
 		void missing_content_error_stub(int /*mode*/, const char* /*message*/)
 		{
-			game::Com_Error(game::ERR_DROP, utils::string::va("MISSING FILE\n%s.ff", fastfiles::get_current_fastfile()));
+			game::Com_Error(game::ERR_DROP,
+			                utils::string::va("MISSING FILE\n%s.ff", fastfiles::get_current_fastfile()));
 		}
 
 		void bsp_sys_error_stub(const char* error, const char* arg1)
@@ -189,7 +173,7 @@ namespace patches
 			// Unlock fps in main menu
 			utils::hook::set<BYTE>(SELECT_VALUE(0x140144F5B, 0x140213C3B), 0xEB);
 
-			// Unlock fps
+			// Unlock com_maxfps
 			utils::hook::call(SELECT_VALUE(0x1402F8726, 0x1403CF8CA), register_com_maxfps_stub);
 
 			// Unlock cg_fov
@@ -226,11 +210,6 @@ namespace patches
 
 		static void patch_mp()
 		{
-			// Disable virtualLobby
-			utils::hook::call(0x1403CFDCC, register_virtual_lobby_enabled_stub); // virtualLobbyEnabled
-			//utils::hook::call(0x14013E0C0, register_virtual_lobby_stubs); // virtualLobbyReady
-			utils::hook::call(0x1403CFE6A, register_virtual_lobby_stubs); // virtualLobbyAllocated
-
 			// Use name dvar
 			live_get_local_client_name_hook.create(0x1404D47F0, &live_get_local_client_name);
 
@@ -245,13 +224,14 @@ namespace patches
 
 			// client side aim assist dvar
 			dvars::aimassist_enabled = game::Dvar_RegisterBool("aimassist_enabled", true,
-				game::DvarFlags::DVAR_FLAG_SAVED,
-				"Enables aim assist for controllers");
+			                                                   game::DvarFlags::DVAR_FLAG_SAVED,
+			                                                   "Enables aim assist for controllers");
 			utils::hook::call(0x140003609, aim_assist_add_to_target_list);
 
 			// unlock all items
 			utils::hook::jump(0x1403BD790, is_item_unlocked); // LiveStorage_IsItemUnlockedFromTable_LocalClient
 			utils::hook::jump(0x1403BD290, is_item_unlocked); // LiveStorage_IsItemUnlockedFromTable
+			utils::hook::jump(0x1403BAF60, is_item_unlocked); // idk ( unlocks loot etc )
 
 			// disable emblems
 			dvars::override::Dvar_RegisterInt("emblems_active", 0, 0, 0, game::DVAR_FLAG_NONE);
@@ -263,11 +243,16 @@ namespace patches
 
 			// disable codPointStore
 			dvars::override::Dvar_RegisterInt("codPointStore_enabled", 0, 0, 0, game::DVAR_FLAG_NONE);
+
+			// don't register every replicated dvar as a network dvar
+			utils::hook::nop(0x1403534BE, 5); // dvar_foreach
+
+			// patch "Server is different version" to show the server client version
+			utils::hook::inject(0x1404398B2, VERSION);
 		}
 
 		static void patch_sp()
 		{
-
 		}
 	};
 }

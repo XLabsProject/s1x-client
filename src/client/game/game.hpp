@@ -12,6 +12,7 @@ namespace game
 	namespace environment
 	{
 		launcher::mode get_mode();
+		launcher::mode get_real_mode();
 
 		bool is_sp();
 		bool is_mp();
@@ -28,7 +29,7 @@ namespace game
 	public:
 		symbol(const size_t sp_address, const size_t mp_address)
 			: sp_object_(reinterpret_cast<T*>(sp_address))
-			, mp_object_(reinterpret_cast<T*>(mp_address))
+			  , mp_object_(reinterpret_cast<T*>(mp_address))
 		{
 		}
 
@@ -42,7 +43,7 @@ namespace game
 			return mp_object_;
 		}
 
-		operator T* () const
+		operator T*() const
 		{
 			return this->get();
 		}
@@ -62,6 +63,8 @@ namespace game
 
 	int SV_Cmd_Argc();
 	const char* SV_Cmd_Argv(int index);
+
+	bool VirtualLobby_Loaded();
 }
 
 #include "symbols.hpp"

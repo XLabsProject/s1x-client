@@ -363,7 +363,7 @@ namespace command
 				}
 
 				auto ps = game::SV_GetPlayerstateForClientNum(0);
-				auto wp = game::G_GetWeaponForName(params.get(1));
+				const auto wp = game::G_GetWeaponForName(params.get(1));
 				if (wp)
 				{
 					if (game::G_GivePlayerWeapon(ps, wp, 0, 0, 0, 0, 0, 0))
@@ -388,7 +388,7 @@ namespace command
 				}
 
 				auto ps = game::SV_GetPlayerstateForClientNum(0);
-				auto wp = game::G_GetWeaponForName(params.get(1));
+				const auto wp = game::G_GetWeaponForName(params.get(1));
 				if (wp)
 				{
 					game::G_TakePlayerWeapon(ps, wp);
@@ -485,7 +485,7 @@ namespace command
 				}
 
 				auto ps = game::SV_GetPlayerstateForClientNum(client_num);
-				auto wp = game::G_GetWeaponForName(params.get(1));
+				const auto wp = game::G_GetWeaponForName(params.get(1));
 				if (wp)
 				{
 					if (game::G_GivePlayerWeapon(ps, wp, 0, 0, 0, 0, 0, 0))
@@ -513,7 +513,7 @@ namespace command
 				}
 
 				auto ps = game::SV_GetPlayerstateForClientNum(client_num);
-				auto wp = game::G_GetWeaponForName(params.get(1));
+				const auto wp = game::G_GetWeaponForName(params.get(1));
 				if (wp)
 				{
 					game::G_TakePlayerWeapon(ps, wp);

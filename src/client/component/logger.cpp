@@ -2,8 +2,6 @@
 #include "loader/component_loader.hpp"
 
 #include "game/game.hpp"
-
-#include "command.hpp"
 #include "game_console.hpp"
 
 #include <utils/hook.hpp>
@@ -26,7 +24,7 @@ namespace logger
 		{
 			game_console::print(game_console::con_type_info, msg);
 		}
-		
+
 		// nullsub_56
 		void nullsub_56()
 		{
