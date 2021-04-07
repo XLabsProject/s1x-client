@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.0.2] - 2021-04-07
+
 ### Added
 
 -   Offline mode [#19](https://github.com/XLabsProject/s1x-client/issues/19)
@@ -38,4 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Fix slowmotion on dedicated [#54](https://github.com/XLabsProject/s1x-client/pull/54) ([@Joelrau](https://github.com/Joelrau))
 -   Discord RPC - party size + party size max [#59](https://github.com/XLabsProject/s1x-client/pull/59) ([@mjkzy](https://github.com/mjkzy))
 
-[Unreleased]: https://github.com/XLabsProject/s1x-client/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/XLabsProject/s1x-client/compare/v0.0.2...HEAD
+
+[v0.0.2]: https://github.com/XLabsProject/s1x-client/compare/fe110ade18de7fd9c57230de28f8cef96832ac3e...v0.0.2
