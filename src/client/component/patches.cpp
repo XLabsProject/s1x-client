@@ -285,7 +285,7 @@ namespace patches
 			utils::hook::set<uint8_t>(0x14019B9B9, 0xEB);
 
 			// some anti tamper thing that kills performance
-			dvars::override::Dvar_RegisterInt("dvl", 0, 0, 0, game::DVAR_FLAG_NONE);
+			dvars::override::Dvar_RegisterInt("dvl", 0, 0, 0, game::DVAR_FLAG_READ);
 			
 			// unlock safeArea_*
 			utils::hook::jump(0x140219F5E, 0x140219F67);
