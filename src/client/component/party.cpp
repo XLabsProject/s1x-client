@@ -315,7 +315,7 @@ namespace party
 				}
 				else if (hostDefined == 0)
 				{
-					console::info("Cannot reconnect to server.");
+					console::info("Cannot reconnect to server.\n");
 				}
 			});
 
