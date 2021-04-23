@@ -309,7 +309,14 @@ namespace party
 
 			command::add("reconnect", [](const command::params& argument)
 			{
-				connect(connect_state.host);
+				if (hostDefined == 1)
+				{
+					connect(connect_state.host);
+				}
+				else if (hostDefined == 0)
+				{
+					console::info("Cannot reconnect to server.");
+				}
 			});
 
 			command::add("connect", [](const command::params& argument)
