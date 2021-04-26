@@ -65,7 +65,7 @@ namespace gameplay
 
 			// Implement player ejection dvar
 			dvars::g_playerEjection = game::Dvar_RegisterBool("g_playerEjection", true, game::DVAR_FLAG_REPLICATED,
-			                                                  "Flag whether player ejection is on or off");
+																"Flag whether player ejection is on or off");
 			utils::hook::call(0x1402D5E4A, stuck_in_client_stub);
 
 			// Implement player collision dvar
