@@ -70,14 +70,14 @@ namespace gameplay
 
 			// Implement player collision dvar
 			dvars::g_playerCollision = game::Dvar_RegisterBool("g_playerCollision", true, game::DVAR_FLAG_REPLICATED,
-			                                                   "Flag whether player collision is on or off");
+			                                                	"Flag whether player collision is on or off");
 			utils::hook::call(0x1404563DA, cm_transformed_capsule_trace_stub); // SV_ClipMoveToEntity
 			utils::hook::call(0x1401F7F8F, cm_transformed_capsule_trace_stub); // CG_ClipMoveToEntity
 
 			// Implement bouncing dvar
 			utils::hook::jump(0x14014DF91, pm_bouncing_stub_mp, true);
 			dvars::pm_bouncing = game::Dvar_RegisterBool("pm_bouncing", false,
-			                                             game::DVAR_FLAG_REPLICATED, "Enable bouncing");
+			                                            game::DVAR_FLAG_REPLICATED, "Enable bouncing");
 
 			// Change jump_slowdownEnable dvar flags to just "replicated"
 			utils::hook::set<uint8_t>(0x140135992, game::DVAR_FLAG_REPLICATED);
