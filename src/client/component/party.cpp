@@ -119,7 +119,6 @@ namespace party
 
 			// This function either does Dvar_SetString or Dvar_RegisterString for the given dvar
 			reinterpret_cast<void(*)(const char*, const char*)>(0x1404C39B0)(dvar_name, string);
-			party::sv_motd.clear();
 		}
 
 		void disconnect_stub()
