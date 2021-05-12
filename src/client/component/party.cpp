@@ -140,7 +140,10 @@ namespace party
 		utils::hook::detour cldisconnect_hook;
 		void cl_disconnect_stub(int a1)
 		{
-			party::sv_motd.clear();
+			if (!party::sv_motd.empty())
+			{
+				party::sv_motd.clear();
+			}
 			cldisconnect_hook.invoke<void>(a1);
 		}
 
