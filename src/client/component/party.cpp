@@ -136,6 +136,13 @@ namespace party
 				reinterpret_cast<void (*)(int)>(0x140209EC0)(0);
 			}
 		}
+		
+		utils::hook::detour cldisconnect_hook;
+		void cl_disconnect_stub(int a1)
+		{
+			party::sv_motd.clear();
+			cldisconnect_hook.invoke<void>(a1);
+		}
 
 		const auto drop_reason_stub = utils::hook::assemble([](utils::hook::assembler& a)
 		{
@@ -507,6 +514,8 @@ namespace party
 			});
 
 			utils::hook::call(0x14048811C, didyouknow_stub); // allow custom didyouknow based on sv_motd
+			
+			cldisconnect_hook.create(0x140209EC0, cl_disconnect_stub);
 
 			network::on("getInfo", [](const game::netadr_s& target, const std::string_view& data)
 			{
