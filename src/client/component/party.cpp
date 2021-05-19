@@ -130,16 +130,6 @@ namespace party
 			}
 			cldisconnect_hook.invoke<void>(a1);
 		}
-		
-		utils::hook::detour cldisconnect_hook;
-		void cl_disconnect_stub(int a1)
-		{
-			if (!party::sv_motd.empty())
-			{
-				party::sv_motd.clear();
-			}
-			cldisconnect_hook.invoke<void>(a1);
-		}
 
 		const auto drop_reason_stub = utils::hook::assemble([](utils::hook::assembler& a)
 		{
