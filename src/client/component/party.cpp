@@ -121,20 +121,14 @@ namespace party
 			reinterpret_cast<void(*)(const char*, const char*)>(0x1404C39B0)(dvar_name, string);
 		}
 
-		void disconnect_stub()
+		utils::hook::detour cldisconnect_hook;
+		void cl_disconnect_stub(int a1)
 		{
-			if (!game::VirtualLobby_Loaded())
+			if (!party::sv_motd.empty())
 			{
-				if (game::CL_IsCgameInitialized())
-				{
-					// CL_ForwardCommandToServer
-					reinterpret_cast<void (*)(int, const char*)>(0x14020B310)(0, "disconnect");
-					// CL_WritePacket
-					reinterpret_cast<void (*)(int)>(0x1402058F0)(0);
-				}
-				// CL_Disconnect
-				reinterpret_cast<void (*)(int)>(0x140209EC0)(0);
+				party::sv_motd.clear();
 			}
+			cldisconnect_hook.invoke<void>(a1);
 		}
 		
 		utils::hook::detour cldisconnect_hook;
@@ -153,6 +147,22 @@ namespace party
 			a.mov(ecx, 2);
 			a.jmp(0x140209DD9);
 		});
+	}
+
+	void disconnect_stub()
+	{
+		if (!game::VirtualLobby_Loaded())
+		{
+			if (game::CL_IsCgameInitialized())
+			{
+				// CL_ForwardCommandToServer
+				reinterpret_cast<void (*)(int, const char*)>(0x14020B310)(0, "disconnect");
+				// CL_WritePacket
+				reinterpret_cast<void (*)(int)>(0x1402058F0)(0);
+			}
+			// CL_Disconnect
+			reinterpret_cast<void (*)(int)>(0x140209EC0)(0);
+		}
 	}
 
 	int get_client_num_by_name(const std::string& name)
