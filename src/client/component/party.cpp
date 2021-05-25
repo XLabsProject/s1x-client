@@ -119,7 +119,6 @@ namespace party
 
 			// This function either does Dvar_SetString or Dvar_RegisterString for the given dvar
 			reinterpret_cast<void(*)(const char*, const char*)>(0x1404C39B0)(dvar_name, string);
-			party::sv_motd.clear();
 		}
 
 		void disconnect_stub()
@@ -138,12 +137,26 @@ namespace party
 			}
 		}
 
+		utils::hook::detour cldisconnect_hook;
+
+		void cldisconnect_stub(int a1)
+		{
+			clear_sv_motd();
+			cldisconnect_hook.invoke<void>(a1);
+		}
+
 		const auto drop_reason_stub = utils::hook::assemble([](utils::hook::assembler& a)
 		{
 			a.mov(rdx, rdi);
 			a.mov(ecx, 2);
 			a.jmp(0x140209DD9);
 		});
+	}
+
+	void clear_sv_motd()
+	{
+		party::sv_motd.clear();
+		return;
 	}
 
 	int get_client_num_by_name(const std::string& name)
@@ -285,6 +298,9 @@ namespace party
 
 			// hook disconnect command function
 			utils::hook::jump(0x14020A010, disconnect_stub);
+
+			// detour CL_Disconnect to clear motd
+			cldisconnect_hook.create(0x140209EC0, cldisconnect_stub);
 
 			if (game::environment::is_mp())
 			{
